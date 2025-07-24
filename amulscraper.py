@@ -164,17 +164,23 @@ def check_and_add_to_cart(product_name, url):
 
     return False
 
-# === Main Loop ===
+# === APScheduler for background scraping ===
+from apscheduler.schedulers.background import BackgroundScheduler
+
+def scheduled_scrape():
+    print("[⏰] Scheduled scrape triggered.")
+    for name, url in PRODUCT_URLS.items():
+        try:
+            found = check_and_add_to_cart(name, url)
+            if found:
+                print(f"[✓] {name} found, stopping further checks this round.")
+                break
+        except Exception as e:
+            print(f"[!] Error in scheduled scrape for {name}: {e}")
+
 if __name__ == "__main__":
-    while True:
-        for name, url in PRODUCT_URLS.items():
-            if check_and_add_to_cart(name, url):
-                print("[✓] One product found, no need to check others this round.")
-                break  # stop after first success
-        print("[⏳] Sleeping for 10 minutes before next check...")
-        time.sleep(600)
-    app.run(host='0.0.0.0', port=5000)
-    
-    # Uncomment the following line if you want to run the Flask app in a separate thread
-    # threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 5000}).start()
-#venv\Scripts\activate
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(scheduled_scrape, 'interval', minutes=10)
+    scheduler.start()
+    print("[🚀] Flask app starting with background scheduler.")
+    app.run(host='0.0.0.0', port=10000)

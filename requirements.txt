@@ -3,3 +3,4 @@ webdriver-manager
 requests
 pywhatkit
 python-dotenv
+apscheduler
