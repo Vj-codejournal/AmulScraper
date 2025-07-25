@@ -182,5 +182,6 @@ if __name__ == "__main__":
     scheduler = BackgroundScheduler()
     scheduler.add_job(scheduled_scrape, 'interval', minutes=10)
     scheduler.start()
-    print("[🚀] Flask app starting with background scheduler.")
-    app.run(host='0.0.0.0', port=10000)
+    port = int(os.getenv("PORT", "10000"))
+    print(f"[🚀] Flask app starting with background scheduler on port {port}.")
+    app.run(host='0.0.0.0', port=port)

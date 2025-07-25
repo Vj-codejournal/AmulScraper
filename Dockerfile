@@ -62,8 +62,11 @@ ENV WEBDRIVER_CHROME_DRIVER=/usr/bin/chromedriver
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:10000/health', timeout=5)" || exit 1
 
-# Expose health check port
-EXPOSE 10000
+
+# Expose health check port (default 10000, can be overridden)
+ARG PORT=10000
+ENV PORT=${PORT}
+EXPOSE ${PORT}
 
 # Run the service
-CMD ["gunicorn", "amulscraper:app", "--bind", "0.0.0.0:10000", "--timeout", "120"]
+CMD ["gunicorn", "amulscraper:app", "--bind", "0.0.0.0:${PORT}", "--timeout", "120"]
