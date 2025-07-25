@@ -3,5 +3,4 @@ webdriver-manager
 python-dotenv
 requests
 apscheduler
-pywhatkit
 flask

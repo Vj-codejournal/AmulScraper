@@ -1,6 +1,5 @@
 ##  only background scheduler remains
 import time
-import pywhatkit
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -39,17 +38,6 @@ PRODUCT_URLS = {
 CART_URL = "https://shop.amul.com/en/cart"
 
 # === WhatsApp Notification ===
-def notify_whatsapp(product_name):
-    if ENABLE_WHATSAPP and WHATSAPP_NUMBER:
-        print("[*] Sending WhatsApp notification...")
-        msg = f"🟢 {product_name} is back in stock!\n\nAdd to cart completed.\nView your cart here:\n{CART_URL}"
-        try:
-            pywhatkit.sendwhatmsg_instantly(WHATSAPP_NUMBER, msg, wait_time=20, tab_close=True)
-            print("[+] WhatsApp notification sent!")
-        except Exception as e:
-            print(f"[!] WhatsApp notification failed: {e}")
-    else:
-        print("[i] WhatsApp notifications disabled or number not configured")
 
 def notify_telegram(product_name):
     cart_link = "https://shop.amul.com/en/cart"
