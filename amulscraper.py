@@ -1,14 +1,4 @@
-from flask import Flask, jsonify, request
-
-app = Flask(__name__)
-
-@app.route("/health", methods=["GET"])
-def health():
-    return jsonify({"status": "ok"}), 200
-
-@app.route("/run", methods=["POST", "GET"])
-def run_scraper():
-    results = []
+##  only background scheduler remains
 import time
 import pywhatkit
 from selenium import webdriver
@@ -88,6 +78,9 @@ def check_and_add_to_cart(product_name, url):
 
     # Configure Chrome/Brave (you can also reuse session via user-data-dir)
     options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # Run Chrome in headless mode
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--start-maximized")
     # Uncomment this to reuse session (optional):
     # options.add_argument("--user-data-dir=C:/Users/YourUsername/AppData/Local/BraveSoftware/Brave-Browser/User Data")
@@ -182,6 +175,10 @@ if __name__ == "__main__":
     scheduler = BackgroundScheduler()
     scheduler.add_job(scheduled_scrape, 'interval', minutes=10)
     scheduler.start()
-    port = int(os.getenv("PORT", "10000"))
-    print(f"[🚀] Flask app starting with background scheduler on port {port}.")
-    app.run(host='0.0.0.0', port=port)
+    print("[🚀] Background scheduler started. Scraping every 10 minutes.")
+    try:
+        while True:
+            time.sleep(60)
+    except (KeyboardInterrupt, SystemExit):
+        print("[!] Shutting down scheduler.")
+        scheduler.shutdown()

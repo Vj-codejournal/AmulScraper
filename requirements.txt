@@ -1,6 +1,7 @@
 selenium
 webdriver-manager
-requests
-pywhatkit
 python-dotenv
+requests
 apscheduler
+pywhatkit
+flask
